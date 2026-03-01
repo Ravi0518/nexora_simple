@@ -32,8 +32,8 @@
             <div class="mb-4">
                 <label class="form-label text-secondary">System Role</label>
                 <select name="role" class="form-select bg-transparent text-white border-secondary">
-                    <option value="general_public" {{ $user->role == 'general_public' ? 'selected' : '' }}>General Public</option>
-                    <option value="snake_enthusiast" {{ $user->role == 'snake_enthusiast' ? 'selected' : '' }}>Snake Enthusiast</option>
+                    <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User (General)</option>
+                    <option value="enthusiast" {{ $user->role == 'enthusiast' ? 'selected' : '' }}>Snake Enthusiast</option>
                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrator</option>
                 </select>
             </div>

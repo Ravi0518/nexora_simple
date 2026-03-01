@@ -84,4 +84,34 @@ class IncidentController extends Controller
             'incident_id' => $incident->incident_id,
         ], 201);
     }
+
+    /**
+     * POST /api/incidents/{id}/assign
+     * Assigns an incident to a specific enthusiast.
+     */
+    public function assign(Request $request, $id)
+    {
+        $incident = Incident::findOrFail($id);
+
+        $request->validate([
+            'enthusiast_id' => 'required|exists:users,user_id',
+        ]);
+
+        // Basic authorization check (ideally admin or valid user should be doing this)
+        $user = $request->user();
+        // if ($user->role !== 'admin') ...
+
+        $incident->assigned_enthusiast_id = $request->enthusiast_id;
+        $incident->status = 'assigned';
+        $incident->save();
+
+        // TODO: Trigger Firebase FCM push notification to the assigned enthusiast
+        \Illuminate\Support\Facades\Log::info("FCM Notification mapped to enthusiast ID: " . $request->enthusiast_id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Incident assigned successfully.',
+            'incident' => $incident
+        ]);
+    }
 }

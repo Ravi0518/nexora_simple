@@ -37,7 +37,7 @@ class UserController extends Controller
         $request->validate([
             'fname' => 'required|string|max:255',
             'lname' => 'nullable|string|max:255',
-            'role' => 'required|in:admin,general_public,snake_enthusiast',
+            'role' => 'required|in:admin,user,enthusiast',
         ]);
 
         $user->update($request->all());
@@ -55,5 +55,15 @@ class UserController extends Controller
 
         User::where('user_id', $id)->delete();
         return back()->with('success', 'User removed from Nexora system.');
+    }
+
+    // Verify an enthusiast
+    public function verifyEnthusiast($id)
+    {
+        $user = User::where('user_id', $id)->firstOrFail();
+        // Assuming activation_status = 1 means verified by admin
+        $user->activation_status = 1; 
+        $user->save();
+        return back()->with('success', 'Enthusiast profile has been verified successfully.');
     }
 }

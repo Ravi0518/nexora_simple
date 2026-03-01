@@ -30,6 +30,16 @@
                         </span>
                     </td>
                     <td class="text-end pe-4">
+                        @if($user->role === 'enthusiast' && $user->activation_status == 0)
+                            <form action="{{ route('admin.users.verify_enthusiast', $user->user_id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button class="btn btn-sm btn-outline-info" title="Verify Enthusiast" onclick="return confirm('Verify this enthusiast so they can receive requests?')">
+                                    <i class="fas fa-check-circle"></i> Verify
+                                </button>
+                            </form>
+                        @elseif($user->role === 'enthusiast' && $user->activation_status == 1)
+                            <span class="badge bg-success me-2"><i class="fas fa-check"></i> Verified</span>
+                        @endif
                         <a href="{{ route('users.edit', $user->user_id) }}" class="btn btn-sm btn-outline-success">
                             <i class="fas fa-edit"></i>
                         </a>

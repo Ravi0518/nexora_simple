@@ -99,6 +99,19 @@
             <a class="nav-link {{ request()->routeIs('admin.requests') ? 'active' : '' }}" href="{{ route('admin.requests') }}">
                 <i class="fas fa-ambulance"></i> Help Requests
             </a>
+            
+            <hr class="border-secondary mx-3 my-2">
+            <small class="text-muted px-4 mb-2 text-uppercase fw-bold" style="font-size: 0.75rem;">Enthusiast Ops</small>
+            
+            <a class="nav-link {{ request()->routeIs('admin.enthusiasts.map') ? 'active' : '' }}" href="{{ route('admin.enthusiasts.map') }}">
+                <i class="fas fa-map-location-dot"></i> Live Map
+            </a>
+            <a class="nav-link {{ request()->routeIs('admin.incidents.dispatch') ? 'active' : '' }}" href="{{ route('admin.incidents.dispatch') }}">
+                <i class="fas fa-truck-fast"></i> Dispatch List
+            </a>
+            <a class="nav-link {{ request()->routeIs('admin.catch_reports') ? 'active' : '' }}" href="{{ route('admin.catch_reports') }}">
+                <i class="fas fa-clipboard-check"></i> Catch Reports
+            </a>
 
             <div class="mt-5 px-4">
                 <form action="{{ route('logout') }}" method="POST">

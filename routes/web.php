@@ -34,4 +34,11 @@ Route::middleware(['auth', 'check.role:admin'])->prefix('admin')->group(function
          ->name('snakes.images.destroy');
     Route::get('/incidents', [AdminController::class, 'viewIncidents'])->name('admin.incidents');
     Route::get('/requests', [AdminController::class, 'viewRequests'])->name('admin.requests');
+
+    // New Enthusiast Features
+    Route::get('/enthusiasts/map', [AdminController::class, 'enthusiastMap'])->name('admin.enthusiasts.map');
+    Route::get('/incidents/dispatch', [AdminController::class, 'incidentDispatch'])->name('admin.incidents.dispatch');
+    Route::get('/catch-reports', [AdminController::class, 'catchReports'])->name('admin.catch_reports');
+
+    Route::post('/users/{id}/verify-enthusiast', [UserController::class, 'verifyEnthusiast'])->name('admin.users.verify_enthusiast');
 });

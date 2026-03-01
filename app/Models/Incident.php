@@ -22,6 +22,7 @@ class Incident extends Model
         'status',
         'priority',
         'confidence_level',
+        'assigned_enthusiast_id',
     ];
 
     public function user()
@@ -32,5 +33,15 @@ class Incident extends Model
     public function rescueRequests()
     {
         return $this->hasMany(RescueRequest::class, 'incident_id', 'incident_id');
+    }
+
+    public function assignedEnthusiast()
+    {
+        return $this->belongsTo(User::class, 'assigned_enthusiast_id', 'user_id');
+    }
+
+    public function catchReport()
+    {
+        return $this->hasOne(CatchReport::class, 'incident_id', 'incident_id');
     }
 }

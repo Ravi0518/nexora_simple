@@ -35,6 +35,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'profile_pic',
         'email_verified_at',
+        'experience_years',
+        'affiliation',
+        'is_available',
+        'last_lat',
+        'last_lng',
+        'last_location_updated_at',
     ];
 
     protected $hidden = [
@@ -56,5 +62,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function requests()
     {
         return $this->hasMany(AssistanceRequest::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * Relationship: Assigned incidents for an enthusiast.
+     */
+    public function assignedIncidents()
+    {
+        return $this->hasMany(Incident::class, 'assigned_enthusiast_id', 'user_id');
+    }
+
+    /**
+     * Relationship: Catch reports submitted by an enthusiast.
+     */
+    public function catchReports()
+    {
+        return $this->hasMany(CatchReport::class, 'enthusiast_id', 'user_id');
     }
 }

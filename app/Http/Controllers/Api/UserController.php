@@ -28,6 +28,9 @@ class UserController extends Controller
             'email'                 => $user->email,
             'phone'                 => $user->phone,
             'role'                  => $user->role,
+            'experience_years'      => $user->experience_years,
+            'affiliation'           => $user->affiliation,
+            'activation_status'     => $user->activation_status,
             'profile_image_url'     => $user->profile_pic
                 ? asset('storage/' . $user->profile_pic)
                 : null,
@@ -62,6 +65,8 @@ class UserController extends Controller
             'lname' => 'sometimes|string|max:255',
             'phone' => 'sometimes|nullable|string|max:20',
             'email' => 'sometimes|email|unique:users,email,' . $target->user_id . ',user_id',
+            'experience_years' => 'sometimes|nullable|integer',
+            'affiliation' => 'sometimes|nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -71,7 +76,7 @@ class UserController extends Controller
             ], 422);
         }
 
-        $target->update($request->only('fname', 'lname', 'phone', 'email'));
+        $target->update($request->only('fname', 'lname', 'phone', 'email', 'experience_years', 'affiliation'));
 
         return response()->json([
             'success' => true,
@@ -83,6 +88,8 @@ class UserController extends Controller
                 'email' => $target->email,
                 'phone' => $target->phone,
                 'role'  => $target->role,
+                'experience_years' => $target->experience_years,
+                'affiliation' => $target->affiliation,
             ],
         ], 200);
     }

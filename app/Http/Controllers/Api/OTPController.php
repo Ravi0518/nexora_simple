@@ -47,7 +47,10 @@ class OTPController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:8',
             'role' => 'required',
-            'otp' => 'required|numeric'
+            'otp' => 'required|numeric',
+            'experience_years' => 'nullable|integer',
+            'affiliation' => 'nullable|string',
+            'phone' => 'nullable|string'
         ]);
 
         $cachedOtp = Cache::get('reg_otp_' . $request->email);
@@ -56,15 +59,24 @@ class OTPController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid or expired OTP.'], 400);
         }
 
-        // Create the user
-        $user = User::create([
+        $userData = [
             'fname' => $request->fname,
             'lname' => $request->lname ?? 'User', 
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'phone' => $request->phone,
             'email_verified_at' => now(),
-        ]);
+        ];
+
+        if ($request->role === 'enthusiast') {
+            $userData['experience_years'] = $request->experience_years;
+            $userData['affiliation'] = $request->affiliation;
+            $userData['is_available'] = false;
+        }
+
+        // Create the user
+        $user = User::create($userData);
 
         Cache::forget('reg_otp_' . $request->email);
 

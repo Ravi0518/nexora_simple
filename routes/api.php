@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\RescueRequestController;
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\FactController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ExpertLocationController;
+use App\Http\Controllers\Api\ExpertIncidentController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -38,7 +40,7 @@ Route::get('/snakes/{id}', [SnakeController::class, 'show']);
 
 // --- Experts (public discovery) ---
 Route::get('/experts', [ExpertController::class, 'index']);
-Route::get('/experts/{id}', [ExpertController::class, 'show']);
+Route::get('/experts/{id}', [ExpertController::class, 'show'])->where('id', '[0-9]+');
 
 // --- Did You Know? facts ---
 Route::get('/facts/random', [FactController::class, 'random']);
@@ -61,6 +63,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --- Snake sighting / bite reports ---
     Route::post('/incidents', [IncidentController::class, 'store']);
+    Route::post('/incidents/{id}/assign', [IncidentController::class, 'assign']);
+
+    // --- Experts ---
+    Route::get('/experts/nearby', [ExpertLocationController::class, 'getNearby']);
+    Route::post('/experts/location', [ExpertLocationController::class, 'updateLocation']);
 
     // --- Snake gallery image upload (admin/enthusiast) ---
     Route::post('/snakes/{id}/images', [SnakeImageController::class, 'store']);
@@ -93,6 +100,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Content contribution
         Route::post('/content', [ContentController::class, 'store']);
+
+        // Incident Requests & Catch Reports (enthusiast specific)
+        Route::get('/experts/requests', [ExpertIncidentController::class, 'index']);
+        Route::post('/experts/catch-report', [ExpertIncidentController::class, 'storeCatchReport']);
     });
 });
 

@@ -96,13 +96,16 @@ class AuthController extends Controller
             'fname' => 'sometimes|string|max:255',
             'lname' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->user_id . ',user_id',
+            'phone' => 'sometimes|nullable|string|max:20',
+            'experience_years' => 'sometimes|nullable|integer',
+            'affiliation' => 'sometimes|nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 422);
         }
 
-        $user->update($request->only('fname', 'lname', 'email', 'role'));
+        $user->update($request->only('fname', 'lname', 'email', 'role', 'phone', 'experience_years', 'affiliation'));
 
         return response()->json([
             'success' => true,

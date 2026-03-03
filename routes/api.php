@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Experts ---
     Route::get('/experts/nearby', [ExpertLocationController::class, 'getNearby']);
     Route::post('/experts/location', [ExpertLocationController::class, 'updateLocation']);
+    Route::post('/experts/status', [ExpertLocationController::class, 'updateStatus']);
 
     // --- Snake gallery image upload (admin/enthusiast) ---
     Route::post('/snakes/{id}/images', [SnakeImageController::class, 'store']);

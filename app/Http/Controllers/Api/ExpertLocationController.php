@@ -40,6 +40,32 @@ class ExpertLocationController extends Controller
     }
 
     /**
+     * POST /api/experts/status
+     * Update enthusiast's availability status.
+     */
+    public function updateStatus(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role !== 'enthusiast') {
+            return response()->json(['success' => false, 'message' => 'Only enthusiasts can update status.'], 403);
+        }
+
+        $request->validate([
+            'is_available' => 'required|boolean',
+        ]);
+
+        $user->update([
+            'is_available' => $request->is_available,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully.'
+        ]);
+    }
+
+    /**
      * GET /api/experts/nearby?lat=X&lng=Y
      * Return available enthusiasts sorted by distance to the given coordinates.
      */

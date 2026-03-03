@@ -92,6 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // =====================================================================
     Route::middleware('check.role:admin,enthusiast')->group(function () {
         Route::get('/incidents', [IncidentController::class, 'index']);
+        Route::get('/incidents/recent', [IncidentController::class, 'recent']);
     });
 
 

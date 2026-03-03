@@ -38,6 +38,33 @@ class IncidentController extends Controller
     }
 
     /**
+     * GET /api/incidents/recent
+     * List incidents updated within the last 24 hours.
+     */
+    public function recent(Request $request)
+    {
+        $incidents = Incident::where('updated_at', '>=', now()->subHours(24))
+            ->latest()
+            ->get();
+
+        return response()->json($incidents->map(fn($i) => [
+            'id'            => $i->incident_id,
+            'type'          => $i->type ?? $i->incident_type,
+            'snake_name'    => $i->snake_name,
+            'description'   => $i->description,
+            'location_name' => $i->location_name ?? $i->location,
+            'lat'           => $i->lat,
+            'lng'           => $i->lng,
+            'image_url'     => $i->image_path ? asset('storage/' . $i->image_path) : null,
+            'reporter_phone'=> $i->reporter_phone,
+            'reported_at'   => $i->created_at,
+            'updated_at'    => $i->updated_at,
+            'priority'      => $i->priority ?? 'medium',
+            'status'        => $i->status ?? 'open',
+        ]));
+    }
+
+    /**
      * GET /api/my-incidents
      * List incidents reported by the currently authenticated user.
      */

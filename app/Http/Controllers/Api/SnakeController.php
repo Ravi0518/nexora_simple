@@ -73,7 +73,15 @@ class SnakeController extends Controller
     // -------------------------------------------------------------------------
     public function show($id)
     {
-        $snake = Snake::with('images')->findOrFail($id);
+        $snake = Snake::with('images')->find($id);
+        
+        if (!$snake) {
+            return response()->json([
+                'success' => false,
+                'message' => 'this image cant identify result'
+            ], 404);
+        }
+
         return response()->json($this->formatSnake($snake));
     }
 

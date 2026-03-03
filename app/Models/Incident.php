@@ -19,6 +19,7 @@ class Incident extends Model
         'lng',
         'image_path',
         'description',
+        'reporter_phone',
         'status',
         'priority',
         'confidence_level',

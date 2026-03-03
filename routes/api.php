@@ -42,6 +42,10 @@ Route::get('/snakes/{id}', [SnakeController::class, 'show']);
 Route::get('/experts', [ExpertController::class, 'index']);
 Route::get('/experts/{id}', [ExpertController::class, 'show'])->where('id', '[0-9]+');
 
+// --- Enthusiasts (public discovery - new users schema) ---
+Route::get('/enthusiasts', [ExpertLocationController::class, 'getAllEnthusiasts']);
+Route::get('/enthusiasts/{id}', [ExpertLocationController::class, 'getEnthusiastDetails'])->where('id', '[0-9]+');
+
 // --- Did You Know? facts ---
 Route::get('/facts/random', [FactController::class, 'random']);
 
@@ -62,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/update/{id}', [UserController::class, 'update']);
 
     // --- Snake sighting / bite reports ---
+    Route::get('/my-incidents', [IncidentController::class, 'myIncidents']);
     Route::post('/incidents', [IncidentController::class, 'store']);
     Route::post('/incidents/{id}/assign', [IncidentController::class, 'assign']);
 

@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; // added import
 use App\Http\Controllers\Admin\AdminController;
+
 use App\Http\Controllers\Admin\SnakeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\MailTestController; // added for test route
@@ -39,6 +40,10 @@ Route::middleware(['auth', 'check.role:admin'])->prefix('admin')->group(function
     Route::get('/enthusiasts/map', [AdminController::class, 'enthusiastMap'])->name('admin.enthusiasts.map');
     Route::get('/incidents/dispatch', [AdminController::class, 'incidentDispatch'])->name('admin.incidents.dispatch');
     Route::get('/catch-reports', [AdminController::class, 'catchReports'])->name('admin.catch_reports');
+
+    // Incident detail + reassignment (web, no Sanctum token needed)
+    Route::get('/incidents/{id}', [AdminController::class, 'showIncident'])->name('admin.incidents.show');
+    Route::post('/incidents/{id}/assign', [AdminController::class, 'assignEnthusiast'])->name('admin.incidents.assign');
 
     Route::post('/users/{id}/verify-enthusiast', [UserController::class, 'verifyEnthusiast'])->name('admin.users.verify_enthusiast');
 });

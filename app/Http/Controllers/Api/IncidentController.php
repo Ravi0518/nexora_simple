@@ -38,18 +38,46 @@ class IncidentController extends Controller
     }
 
     /**
+     * GET /api/my-incidents
+     * List incidents reported by the currently authenticated user.
+     */
+    public function myIncidents(Request $request)
+    {
+        $perPage = $request->get('per_page', 20);
+
+        $incidents = Incident::where('user_id', $request->user()->user_id)
+            ->latest()
+            ->paginate($perPage);
+
+        return response()->json($incidents->getCollection()->map(fn($i) => [
+            'id'            => $i->incident_id,
+            'type'          => $i->type ?? $i->incident_type,
+            'snake_name'    => $i->snake_name,
+            'location_name' => $i->location_name ?? $i->location,
+            'lat'           => $i->lat,
+            'lng'           => $i->lng,
+            'reported_at'   => $i->created_at,
+            'priority'      => $i->priority ?? 'medium',
+            'status'        => $i->status ?? 'open',
+        ]));
+    }
+
+    /**
      * POST /api/incidents
      * Submit a snake sighting or bite report (multipart/form-data).
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'type'          => 'required|in:sighting,bite',
-            'description'   => 'required|string',
-            'location_name' => 'required|string',
-            'lat'           => 'required|numeric',
-            'lng'           => 'required|numeric',
-            'image'         => 'nullable|image|max:5120', // 5 MB max
+            'type'             => 'required|in:sighting,bite',
+            'description'      => 'required|string',
+            'location_name'    => 'required|string',
+            'lat'              => 'required|numeric',
+            'lng'              => 'required|numeric',
+            'image'            => 'nullable|image|max:5120', // 5 MB max
+            'confidence_level' => 'nullable|numeric|min:0|max:100',
+            'snake_name'       => 'nullable|string|max:255',
+            'reporter_phone'   => 'nullable|string|max:20',
         ]);
 
         if ($validator->fails()) {
@@ -65,17 +93,20 @@ class IncidentController extends Controller
         }
 
         $incident = Incident::create([
-            'user_id'       => $request->user()->user_id,
-            'incident_type' => $request->type,
-            'type'          => $request->type,
-            'description'   => $request->description,
-            'location'      => $request->location_name,
-            'location_name' => $request->location_name,
-            'lat'           => $request->lat,
-            'lng'           => $request->lng,
-            'image_path'    => $imagePath,
-            'status'        => 'open',
-            'priority'      => 'medium',
+            'user_id'          => $request->user()->user_id,
+            'incident_type'    => $request->type,
+            'type'             => $request->type,
+            'description'      => $request->description,
+            'location'         => $request->location_name,
+            'location_name'    => $request->location_name,
+            'lat'              => $request->lat,
+            'lng'              => $request->lng,
+            'image_path'       => $imagePath,
+            'status'           => 'open',
+            'priority'         => 'medium',
+            'confidence_level' => $request->confidence_level,
+            'reporter_phone'   => $request->reporter_phone,
+            'snake_name'       => $request->snake_name,
         ]);
 
         return response()->json([

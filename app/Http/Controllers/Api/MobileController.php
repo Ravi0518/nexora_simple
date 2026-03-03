@@ -60,7 +60,7 @@ class MobileController extends Controller
             'snake_name' => $request->snake_name,
             'location' => $request->location,
             'image_path' => $path,
-            'confidence_level' => $request->confidence ?? 'Manual',
+            'confidence_level' => is_numeric($request->confidence) ? $request->confidence : null,
         ]);
 
         return response()->json(['message' => 'Report Saved', 'data' => $incident], 201);

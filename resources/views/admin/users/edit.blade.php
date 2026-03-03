@@ -38,6 +38,22 @@
                 </select>
             </div>
 
+            <!-- Enthusiast Specific Fields -->
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label text-secondary">Phone Number</label>
+                    <input type="text" name="phone" value="{{ $user->phone }}" class="form-control bg-transparent text-white border-secondary">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label text-secondary">Experience Years (Enthusiasts)</label>
+                    <input type="number" name="experience_years" value="{{ $user->experience_years }}" class="form-control bg-transparent text-white border-secondary">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label text-secondary">Affiliation (Enthusiasts)</label>
+                    <input type="text" name="affiliation" value="{{ $user->affiliation }}" class="form-control bg-transparent text-white border-secondary">
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
                 UPDATE USER DATA
             </button>

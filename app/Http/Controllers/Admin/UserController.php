@@ -38,9 +38,12 @@ class UserController extends Controller
             'fname' => 'required|string|max:255',
             'lname' => 'nullable|string|max:255',
             'role' => 'required|in:admin,user,enthusiast',
+            'phone' => 'nullable|string|max:20',
+            'experience_years' => 'nullable|numeric',
+            'affiliation' => 'nullable|string|max:255',
         ]);
 
-        $user->update($request->all());
+        $user->update($request->only('fname', 'lname', 'role', 'phone', 'experience_years', 'affiliation'));
 
         return redirect()->route('users.index')->with('success', 'User profile synchronized successfully.');
     }

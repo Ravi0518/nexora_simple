@@ -68,4 +68,48 @@ class ExpertLocationController extends Controller
             'data'    => $experts
         ]);
     }
+
+    /**
+     * GET /api/enthusiasts
+     * Public discovery of all verified enthusiasts.
+     */
+    public function getAllEnthusiasts(Request $request)
+    {
+        $experts = User::where('role', 'enthusiast')
+            ->select('user_id as id', 'fname', 'lname', 'role', 'phone', 'experience_years', 'affiliation', 'profile_pic', 'is_available')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $experts
+        ]);
+    }
+
+    /**
+     * GET /api/enthusiasts/{id}
+     * Public info about a single enthusiast.
+     */
+    public function getEnthusiastDetails($id)
+    {
+        $expert = User::where('role', 'enthusiast')->where('user_id', $id)->first();
+
+        if (!$expert) {
+            return response()->json(['success' => false, 'message' => 'Enthusiast not found'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $expert->user_id,
+                'fname' => $expert->fname,
+                'lname' => $expert->lname,
+                'role' => $expert->role,
+                'phone' => $expert->phone,
+                'experience_years' => $expert->experience_years,
+                'affiliation' => $expert->affiliation,
+                'profile_pic' => $expert->profile_pic,
+                'is_available' => $expert->is_available
+            ]
+        ]);
+    }
 }

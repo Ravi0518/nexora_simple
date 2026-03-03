@@ -83,4 +83,27 @@ class ExpertIncidentController extends Controller
             'catch_report' => $report
         ], 201);
     }
+
+    /**
+     * GET /api/experts/catch-reports
+     * Fetch all catch reports made by the logged-in enthusiast.
+     */
+    public function getCatchReports(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role !== 'enthusiast') {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $reports = \App\Models\CatchReport::with(['incident', 'user'])
+            ->where('enthusiast_id', $user->user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $reports
+        ]);
+    }
 }

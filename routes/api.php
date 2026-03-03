@@ -109,6 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Incident Requests & Catch Reports (enthusiast specific)
         Route::get('/experts/requests', [ExpertIncidentController::class, 'index']);
         Route::post('/experts/catch-report', [ExpertIncidentController::class, 'storeCatchReport']);
+        Route::get('/experts/catch-reports', [ExpertIncidentController::class, 'getCatchReports']);
     });
 });
 

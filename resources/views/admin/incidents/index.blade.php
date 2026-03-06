@@ -3,8 +3,8 @@
 @section('content')
 <div class="mb-4 d-flex justify-content-between align-items-center">
     <div>
-        <h2 class="fw-bold text-white mb-0">Snake Incident Reports</h2>
-        <p class="text-secondary mb-0">Real-time identification reports submitted from the mobile app.</p>
+        <h2 class="fw-bold text-white mb-0">Incident Reports</h2>
+        <p class="text-secondary mb-0">Snake sighting &amp; bite reports submitted from the mobile app.</p>
     </div>
     <span class="badge bg-danger fs-6">{{ $incidents->total() }} Total</span>
 </div>
@@ -52,22 +52,32 @@
 
                     <td>
                         @if($incident->snake_name)
-                            <span class="text-success fw-bold">{{ $incident->snake_name }}</span>
+                            <span class="text-success fw-bold">
+                                <i class="fas fa-check-circle me-1"></i>{{ $incident->snake_name }}
+                            </span>
                         @else
-                            <span class="text-secondary">—</span>
+                            <span class="badge bg-secondary text-light"
+                                  title="No CNN scan data received for this report"
+                                  data-bs-toggle="tooltip">
+                                Not scanned
+                            </span>
                         @endif
                     </td>
 
-                    <td style="min-width: 110px;">
+                    <td style="min-width: 120px;">
                         @php $conf = $incident->confidence_level; @endphp
                         @if($conf !== null)
                             <div class="progress bg-secondary mb-1" style="height:6px; width:90px;">
                                 <div class="progress-bar {{ $conf >= 70 ? 'bg-success' : ($conf >= 40 ? 'bg-warning' : 'bg-danger') }}"
                                      style="width:{{ $conf }}%"></div>
                             </div>
-                            <small class="text-secondary">{{ number_format($conf, 1) }}% match</small>
+                            <small class="{{ $conf >= 70 ? 'text-success' : ($conf >= 40 ? 'text-warning' : 'text-danger') }} fw-bold">
+                                {{ number_format($conf, 1) }}%
+                            </small>
                         @else
-                            <small class="text-secondary">—</small>
+                            <small class="text-secondary"
+                                   title="No CNN confidence score for this report"
+                                   data-bs-toggle="tooltip">N/A</small>
                         @endif
                     </td>
 

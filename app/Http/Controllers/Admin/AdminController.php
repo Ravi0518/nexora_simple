@@ -37,19 +37,35 @@ class AdminController extends Controller
 
     public function enthusiastMap()
     {
-        $enthusiasts = User::where('role', 'enthusiast')
-            ->where('is_available', true)
-            ->whereNotNull('last_lat')
-            ->whereNotNull('last_lng')
-            ->get();
-            
-        $incidents = Incident::with('assignedEnthusiast')
+        // All enthusiasts for the map (JS skips null-coord ones)
+        $enthusiasts = User::where('role', 'enthusiast')->get();
+
+        // Active incidents with coordinates (for map markers)
+        $incidents = Incident::with(['assignedEnthusiast', 'user'])
             ->whereIn('status', ['open', 'pending', 'assigned', 'in_progress'])
             ->whereNotNull('lat')
             ->whereNotNull('lng')
             ->get();
 
-        return view('admin.enthusiasts.map', compact('enthusiasts', 'incidents'));
+        // Enthusiasts active in the last 24 h (last GPS ping received)
+        $enthusiastsRecent = User::where('role', 'enthusiast')
+            ->where(function ($q) {
+                $q->where('last_location_updated_at', '>=', now()->subHours(24))
+                  ->orWhere('updated_at', '>=', now()->subHours(24));
+            })
+            ->orderByDesc('last_location_updated_at')
+            ->get();
+
+        // Incidents reported in the last 24 h
+        $incidentsRecent = Incident::with(['user', 'assignedEnthusiast'])
+            ->where('created_at', '>=', now()->subHours(24))
+            ->latest()
+            ->get();
+
+        return view('admin.enthusiasts.map', compact(
+            'enthusiasts', 'incidents',
+            'enthusiastsRecent', 'incidentsRecent'
+        ));
     }
 
     public function incidentDispatch()

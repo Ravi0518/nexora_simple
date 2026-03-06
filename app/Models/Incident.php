@@ -24,6 +24,7 @@ class Incident extends Model
         'priority',
         'confidence_level',
         'assigned_enthusiast_id',
+        'accepted_at',
     ];
 
     public function user()

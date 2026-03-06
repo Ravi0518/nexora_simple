@@ -81,6 +81,16 @@ class RescueRequestController extends Controller
 
         $rescueReq->update(['status' => 'accepted']);
 
+        // Update the actual incident so it drops off pending boards and hits the dashboard
+        $incident = $rescueReq->incident;
+        if ($incident) {
+            $incident->update([
+                'status' => 'assigned',
+                'assigned_enthusiast_id' => $request->user()->user_id,
+                'accepted_at' => now(),
+            ]);
+        }
+
         // Return reporter's contact info
         $incident = $rescueReq->incident;
         $reporter = $incident ? User::find($incident->user_id) : null;

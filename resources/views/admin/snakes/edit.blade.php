@@ -83,9 +83,9 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-secondary small fw-bold">REGION</label>
                         <select name="region" class="form-select bg-transparent text-white border-secondary shadow-none">
-                            <option value="">— Select Region —</option>
+                            <option value="" class="bg-dark text-white">— Select Region —</option>
                             @foreach(['Island-wide','Wet Zone','Dry Zone','Hill Country','Coastal','North','East'] as $r)
-                                <option value="{{ $r }}" {{ old('region', $snake->region) == $r ? 'selected' : '' }}>{{ $r }}</option>
+                                <option value="{{ $r }}" class="bg-dark text-white" {{ old('region', $snake->region) == $r ? 'selected' : '' }}>{{ $r }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -100,23 +100,14 @@
                             <label class="form-check-label text-white" for="isVenomousEdit">Yes</label>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (English)</label>
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL</label>
                         <select name="danger_level" class="form-select bg-transparent text-white border-secondary shadow-none">
-                            @foreach(['Non-Venomous','Mildly Venomous','Venomous','Highly Venomous'] as $dl)
-                                <option value="{{ $dl }}" {{ old('danger_level', $snake->danger_level ?? $snake->venomous_status) == $dl ? 'selected' : '' }}>{{ $dl }}</option>
+                            <option value="" class="bg-dark text-white">— Select —</option>
+                            @foreach(['Non-Venomous','Mildly Venomous','Moderately Venomous','Highly Venomous'] as $dl)
+                                <option value="{{ $dl }}" class="bg-dark text-white" {{ old('danger_level', $snake->danger_level ?? $snake->venomous_status) == $dl ? 'selected' : '' }}>{{ $dl }}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (Sinhala)</label>
-                        <input type="text" name="danger_level_si" value="{{ old('danger_level_si', $snake->danger_level_si) }}"
-                               class="form-control bg-transparent text-white border-secondary shadow-none">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (Tamil)</label>
-                        <input type="text" name="danger_level_ta" value="{{ old('danger_level_ta', $snake->danger_level_ta) }}"
-                               class="form-control bg-transparent text-white border-secondary shadow-none">
                     </div>
                 </div>
             </div>
@@ -148,14 +139,11 @@
                                     {{ $img->sort_order == 0 ? 'Hero' : 'Gallery '.($img->sort_order) }}
                                 </span>
                             </div>
-                            <form action="{{ route('snakes.images.destroy', [$snake->snake_id, $img->id]) }}"
-                                  method="POST" class="mt-2"
-                                  onsubmit="return confirm('Delete this image?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <div class="mt-2 text-center">
+                                <button type="submit" form="deleteImageForm{{ $img->id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this image?')">
                                     <i class="fas fa-trash-alt"></i> Remove
                                 </button>
-                            </form>
+                            </div>
                         </div>
                         @endforeach
                     </div>
@@ -193,6 +181,15 @@
 </button>
 
 </form>
+
+{{-- Hidden forms for image deletion (must be outside the main form) --}}
+@if($snake->images->count())
+    @foreach($snake->images as $img)
+        <form id="deleteImageForm{{ $img->id }}" action="{{ route('snakes.images.destroy', [$snake->snake_id, $img->id]) }}" method="POST" style="display:none;">
+            @csrf @method('DELETE')
+        </form>
+    @endforeach
+@endif
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

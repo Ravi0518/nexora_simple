@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 
 /**
  * PROFESSIONAL ENGLISH DOCUMENTATION
@@ -82,6 +83,40 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    /**
+     * --- FORGOT PASSWORD ---
+     * Sends a password reset link to the user's email.
+     */
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email address not found.' 
+            ], 404);
+        }
+
+        $status = Password::broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your password reset link has been sent to your email.'
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => __($status)
+        ], 400);
     }
 
     /**

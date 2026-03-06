@@ -166,19 +166,19 @@ class SnakeController extends Controller
             'name_ta'           => $request->name_ta,
             'scientific_name'   => $request->scientific_name,
 
-            // Venom
+            // ... (rest of venom handled above)
             'is_venomous'       => $request->boolean('is_venomous'),
             'venomous_status'   => $request->danger_level, // keep legacy in sync
             'danger_level'      => $request->danger_level,
-            'danger_level_si'   => $request->danger_level_si,
-            'danger_level_ta'   => $request->danger_level_ta,
+            'danger_level_si'   => $this->getDangerLevelTranslation($request->danger_level, 'si') ?? '',
+            'danger_level_ta'   => $this->getDangerLevelTranslation($request->danger_level, 'ta') ?? '',
 
             // Location
-            'region'            => $request->region,
+            'region'            => $request->region ?? '',
 
             // About
             'about'             => $request->about,
-            'description'       => $request->about, // keep legacy in sync
+            'description'       => $request->about ?? '', // keep legacy in sync
             'about_si'          => $request->about_si,
             'about_ta'          => $request->about_ta,
 
@@ -199,7 +199,7 @@ class SnakeController extends Controller
 
             // First Aid — line-by-line textarea → JSON array
             'first_aid'         => $toJson($request->first_aid),
-            'first_aid_steps'   => $request->first_aid, // keep legacy plain text
+            'first_aid_steps'   => $request->first_aid ?? '', // keep legacy plain text
             'first_aid_si'      => $toJson($request->first_aid_si),
             'first_aid_ta'      => $toJson($request->first_aid_ta),
 
@@ -208,5 +208,29 @@ class SnakeController extends Controller
             'donts_si'          => $toJson($request->donts_si),
             'donts_ta'          => $toJson($request->donts_ta),
         ];
+    }
+
+    /**
+     * Helper to map English danger level explicitly because older PHP versions 
+     * don't support the 'match' expression.
+     */
+    private function getDangerLevelTranslation($englishLevel, $lang)
+    {
+        $map = [
+            'si' => [
+                'Non-Venomous'        => 'විෂ රහිත',
+                'Mildly Venomous'     => 'සුළු විෂ සහිත',
+                'Moderately Venomous' => 'මද විෂ සහිත',
+                'Highly Venomous'     => 'උග්ර විෂ සහිත',
+            ],
+            'ta' => [
+                'Non-Venomous'        => 'விஷமற்றது',
+                'Mildly Venomous'     => 'குறைந்த விஷம்',
+                'Moderately Venomous' => 'மிதமான விஷம்',
+                'Highly Venomous'     => 'மிகக் கடுமையான விஷம்',
+            ],
+        ];
+
+        return $map[$lang][$englishLevel] ?? null;
     }
 }

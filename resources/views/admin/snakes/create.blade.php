@@ -69,14 +69,14 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-secondary small fw-bold">REGION</label>
                         <select name="region" class="form-select bg-transparent text-white border-secondary shadow-none">
-                            <option value="">— Select Region —</option>
-                            <option value="Island-wide">Island-wide</option>
-                            <option value="Wet Zone">Wet Zone</option>
-                            <option value="Dry Zone">Dry Zone</option>
-                            <option value="Hill Country">Hill Country</option>
-                            <option value="Coastal">Coastal</option>
-                            <option value="North">North</option>
-                            <option value="East">East</option>
+                            <option value="" class="bg-dark text-white">— Select Region —</option>
+                            <option value="Island-wide" class="bg-dark text-white">Island-wide</option>
+                            <option value="Wet Zone" class="bg-dark text-white">Wet Zone</option>
+                            <option value="Dry Zone" class="bg-dark text-white">Dry Zone</option>
+                            <option value="Hill Country" class="bg-dark text-white">Hill Country</option>
+                            <option value="Coastal" class="bg-dark text-white">Coastal</option>
+                            <option value="North" class="bg-dark text-white">North</option>
+                            <option value="East" class="bg-dark text-white">East</option>
                         </select>
                     </div>
                 </div>
@@ -89,23 +89,15 @@
                             <label class="form-check-label text-white" for="isVenomousCreate">Yes</label>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (English)</label>
-                        <select name="danger_level" class="form-select bg-transparent text-white border-secondary shadow-none">
-                            <option value="">— Select —</option>
-                            <option value="Non-Venomous">Non-Venomous</option>
-                            <option value="Mildly Venomous">Mildly Venomous</option>
-                            <option value="Venomous">Venomous</option>
-                            <option value="Highly Venomous">Highly Venomous</option>
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL</label>
+                        <select name="danger_level" class="form-control bg-transparent text-white border-secondary shadow-none">
+                            <option value="" class="bg-dark text-white">— Select —</option>
+                            <option value="Non-Venomous" class="bg-dark text-white">Non-Venomous</option>
+                            <option value="Mildly Venomous" class="bg-dark text-white">Mildly Venomous</option>
+                            <option value="Moderately Venomous" class="bg-dark text-white">Moderately Venomous</option>
+                            <option value="Highly Venomous" class="bg-dark text-white">Highly Venomous</option>
                         </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (Sinhala)</label>
-                        <input type="text" name="danger_level_si" class="form-control bg-transparent text-white border-secondary shadow-none" placeholder="e.g. අධික විෂ">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label text-secondary small fw-bold">DANGER LEVEL (Tamil)</label>
-                        <input type="text" name="danger_level_ta" class="form-control bg-transparent text-white border-secondary shadow-none" placeholder="e.g. அதிக நச்சு">
                     </div>
                 </div>
             </div>

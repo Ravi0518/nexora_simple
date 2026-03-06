@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\OTPMail;
 
 class OTPController extends Controller 
 {
@@ -27,11 +28,9 @@ class OTPController extends Controller
         // Log it for local testing
         Log::info("Nexora Registration OTP for {$request->email}: {$otp}");
 
-        // Send real email (Ensure .env is configured)
+        // Send beautiful HTML email
         try {
-            Mail::raw("Your Nexora verification code is: $otp", function ($message) use ($request) {
-                $message->to($request->email)->subject('Nexora Email Verification');
-            });
+            Mail::to($request->email)->send(new OTPMail($otp));
         } catch (\Exception $e) {
             Log::error("Mail failed: " . $e->getMessage());
         }

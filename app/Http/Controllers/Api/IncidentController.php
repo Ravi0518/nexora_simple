@@ -72,21 +72,38 @@ class IncidentController extends Controller
     {
         $perPage = $request->get('per_page', 20);
 
-        $incidents = Incident::where('user_id', $request->user()->user_id)
+        $incidents = Incident::with('assignedEnthusiast')
+            ->where('user_id', $request->user()->user_id)
             ->latest()
             ->paginate($perPage);
 
-        return response()->json($incidents->getCollection()->map(fn($i) => [
-            'id'            => $i->incident_id,
-            'type'          => $i->type ?? $i->incident_type,
-            'snake_name'    => $i->snake_name,
-            'location_name' => $i->location_name ?? $i->location,
-            'lat'           => $i->lat,
-            'lng'           => $i->lng,
-            'reported_at'   => $i->created_at,
-            'priority'      => $i->priority ?? 'medium',
-            'status'        => $i->status ?? 'open',
-        ]));
+        return response()->json($incidents->getCollection()->map(function ($i) {
+            $enthusiast = $i->assignedEnthusiast;
+            // Clean location name: if null or looks like raw coords, use null so Flutter shows coordinates
+            $locName = $i->location_name ?? $i->location;
+            return [
+                'id'              => $i->incident_id,
+                'type'            => $i->type ?? $i->incident_type,
+                'snake_name'      => $i->snake_name,
+                'description'     => $i->description,
+                'location_name'   => $locName,
+                'lat'             => $i->lat,
+                'lng'             => $i->lng,
+                'image_path'      => $i->image_path,
+                'reporter_phone'  => $i->reporter_phone,
+                'reported_at'     => $i->created_at,
+                'priority'        => $i->priority ?? 'medium',
+                'status'          => $i->status ?? 'open',
+                'accepted_at'     => $i->accepted_at,
+                'assigned_enthusiast' => $enthusiast ? [
+                    'name'        => trim(($enthusiast->fname ?? '') . ' ' . ($enthusiast->lname ?? '')),
+                    'phone'       => $enthusiast->phone ?? $enthusiast->contact_number ?? null,
+                    'lat'         => $enthusiast->lat ?? null,
+                    'lng'         => $enthusiast->lng ?? null,
+                    'is_accepted' => !is_null($i->accepted_at),
+                ] : null,
+            ];
+        }));
     }
 
     /**

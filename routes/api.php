@@ -31,6 +31,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::post('/send-otp', [OTPController::class, 'sendRegistrationOTP']);
 Route::post('/verify-register', [OTPController::class, 'verifyAndRegister']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 // --- Snake Species (public catalog) ---
 Route::get('/snakes/search', [SnakeController::class, 'search']);  // Must be before {id}

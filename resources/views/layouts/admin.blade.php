@@ -6,6 +6,7 @@
     <title>Nexora Admin | Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('images/nexor.png') }}">
     
     <style>
         :root {
@@ -81,7 +82,9 @@
 <body>
 
     <div class="sidebar">
-        <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">NEXORA_</a>
+        <a href="{{ route('admin.dashboard') }}" class="sidebar-brand text-center d-block w-100 mb-2">
+            <img src="{{ asset('images/nexor.png') }}" alt="Nexora Logo" style="max-height: 45px; object-fit: contain;">
+        </a>
         
         <nav class="nav flex-column mt-4">
             <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
@@ -94,7 +97,7 @@
                 <i class="fas fa-biohazard"></i> Snakes
             </a>
             <a class="nav-link {{ request()->routeIs('admin.incidents') ? 'active' : '' }}" href="{{ route('admin.incidents') }}">
-                <i class="fas fa-satellite-dish"></i> Sighting API
+                <i class="fas fa-triangle-exclamation"></i> Incident Reports
             </a>
             <a class="nav-link {{ request()->routeIs('admin.requests') ? 'active' : '' }}" href="{{ route('admin.requests') }}">
                 <i class="fas fa-ambulance"></i> Help Requests
@@ -127,6 +130,13 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enable Bootstrap tooltips globally
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipEls = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipEls.forEach(function (el) { new bootstrap.Tooltip(el); });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>
